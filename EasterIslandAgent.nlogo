@@ -1,4 +1,50 @@
+globals [max-population supAgricola supBoscosa supErosionada]
+breed [ population person ]
+turtles-own [ energy ]
+patches-own [ countdown-before-boscosa ]
 
+to setup
+  clear-all
+  set max-population 100000
+  ask patches [ set pcolor brown ]
+  set-default-shape person "person" ; search person icon
+  create-person initial-number-population
+  [
+    set color white
+    set size 1.5  ; easier to see
+    set label-color blue - 2
+    set energy random (2 * sheep-gain-from-food)
+    setxy random-xcor random-ycor
+  ]
+  set supBoscosa count patches with [pcolor = brown ]
+  set supAgricola count patches with [pcolor = green ]
+  set supErosionada count patches with [pcolor = grey ]
+  reset-ticks
+end
+
+to go
+  if not any? population [ stop ]
+  ask person [
+    move
+    if pcolor ? [
+      set energy energy - 1  ; deduct energy for sheep only if grass? switch is on
+      eat-grass
+    ]
+    death
+    reproduce-sheep
+  ]
+  ask wolves [
+    move
+    set energy energy - 1  ; wolves lose energy as they move
+    catch-sheep
+    death
+    reproduce-wolves
+  ]
+  if grass? [ ask patches [ grow-grass ] ]
+  set grass count patches with [pcolor = green]
+  tick
+  display-labels
+end
 @#$#@#$#@
 GRAPHICS-WINDOW
 210
