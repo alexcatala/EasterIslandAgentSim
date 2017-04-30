@@ -6,51 +6,60 @@ patches-own [ countdown-before-boscosa ]
 to setup
   clear-all
   set max-population 100000
-  ask patches [ set pcolor brown ]
-  set-default-shape person "person" ; search person icon
-  create-person initial-number-population
+  ask patches [ set pcolor green ]
+  set-default-shape population "person" ; search person icon
+  create-population initial-number-population
   [
     set color white
     set size 1.5  ; easier to see
     set label-color blue - 2
-    set energy random (2 * sheep-gain-from-food)
+    set energy random (2 * person-gain-from-food)
     setxy random-xcor random-ycor
   ]
   set supBoscosa count patches with [pcolor = brown ]
   set supAgricola count patches with [pcolor = green ]
   set supErosionada count patches with [pcolor = grey ]
+
+  ask n-of 10 patches [ set pcolor yellow ]
   reset-ticks
 end
 
 to go
   if not any? population [ stop ]
-  ask person [
+  ask population [
     move
-    if pcolor ? [
-      set energy energy - 1  ; deduct energy for sheep only if grass? switch is on
-      eat-grass
-    ]
-    death
-    reproduce-sheep
+    work
+    ;reproduce-population
   ]
-  ask wolves [
-    move
-    set energy energy - 1  ; wolves lose energy as they move
-    catch-sheep
-    death
-    reproduce-wolves
-  ]
-  if grass? [ ask patches [ grow-grass ] ]
-  set grass count patches with [pcolor = green]
+
+  set supBoscosa count patches with [pcolor = brown ]
+  set supAgricola count patches with [pcolor = green ]
+  set supErosionada count patches with [pcolor = grey ]
   tick
-  display-labels
+end
+
+to move  ; turtle procedure
+  rt random 50
+  lt random 50
+  fd 1
+end
+
+to work ;
+  if pcolor = yellow [
+    set pcolor brown
+    set energy energy - lost-from-work ;
+  ]
+end
+
+to reproduce-population
+
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-210
-10
-647
-448
+471
+22
+908
+460
 -1
 -1
 13.0
@@ -72,6 +81,85 @@ GRAPHICS-WINDOW
 1
 ticks
 30.0
+
+BUTTON
+25
+56
+92
+89
+setup
+setup
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+BUTTON
+119
+55
+182
+88
+go
+go
+T
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+SLIDER
+22
+137
+248
+170
+initial-number-population
+initial-number-population
+2
+7500
+5000.0
+5
+1
+NIL
+HORIZONTAL
+
+SLIDER
+23
+182
+226
+215
+person-gain-from-food
+person-gain-from-food
+0.0
+100
+50.0
+1.0
+1
+NIL
+HORIZONTAL
+
+SLIDER
+23
+227
+195
+260
+lost-from-work
+lost-from-work
+0
+100
+50.0
+1
+1
+NIL
+HORIZONTAL
 
 @#$#@#$#@
 ## WHAT IS IT?
