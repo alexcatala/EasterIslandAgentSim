@@ -124,8 +124,8 @@ SLIDER
 initial-number-population
 initial-number-population
 2
-7500
-5000.0
+200
+197.0
 5
 1
 NIL
