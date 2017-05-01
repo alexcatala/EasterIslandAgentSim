@@ -1,26 +1,17 @@
-globals [max-population supAgricola supBoscosa supErosionada]
+globals [ max-population supAgricola supBoscosa supErosionada ]
 breed [ population person ]
 turtles-own [ energy ]
-patches-own [ countdown-before-boscosa ]
+patches-own [ countdown-before-growth ]
 
 to setup
   clear-all
   set max-population 100000
-  ask patches [ set pcolor green ]
-  set-default-shape population "person" ; search person icon
-  create-population initial-number-population
-  [
-    set color white
-    set size 1.5  ; easier to see
-    set label-color blue - 2
-    set energy random (2 * person-gain-from-food)
-    setxy random-xcor random-ycor
-  ]
-  set supBoscosa count patches with [pcolor = brown ]
-  set supAgricola count patches with [pcolor = green ]
-  set supErosionada count patches with [pcolor = grey ]
-
-  ask n-of 10 patches [ set pcolor yellow ]
+  init-patches
+  init-population
+  ; No calen ja que a la gràfica es poden posar expressions
+  ;set supBoscosa count patches with [ pcolor = brown ]
+  ;set supAgricola count patches with [ pcolor = green ]
+  ;set supErosionada count patches with [ pcolor = gray ]
   reset-ticks
 end
 
@@ -31,27 +22,71 @@ to go
     work
     ;reproduce-population
   ]
-
-  set supBoscosa count patches with [pcolor = brown ]
-  set supAgricola count patches with [pcolor = green ]
-  set supErosionada count patches with [pcolor = grey ]
+  ask patches with [ pcolor = gray ]
+  [
+    grow
+  ]
   tick
 end
 
-to move  ; turtle procedure
+; -------------------------------------------------------------------
+; Setup methods
+; -------------------------------------------------------------------
+to init-patches
+  ask patches
+  [
+    set pcolor green ; tot es superfície agricola
+    set countdown-before-growth 3
+  ]
+end
+
+to init-population
+  set-default-shape population "person"
+  create-population initial-number-population
+  [
+    set color white
+    set size 1.5  ; easier to see
+    set label-color blue - 2 ; don't know what it does
+    set energy random (2 * gain-from-food)
+    setxy random-xcor random-ycor
+  ]
+end
+
+; -------------------------------------------------------------------
+; Go methods
+; -------------------------------------------------------------------
+
+; People movement
+to move
   rt random 50
   lt random 50
   fd 1
 end
 
-to work ;
-  if pcolor = yellow [
+; People work
+to work
+  if (pcolor = brown)
+  [
+    set pcolor gray
+    set energy energy + gain-from-food
+  ]
+  if (energy - lost-from-work > 0) and (pcolor = green)
+  [
     set pcolor brown
-    set energy energy - lost-from-work ;
+    set energy energy - lost-from-work
   ]
 end
 
+; People reproduction
 to reproduce-population
+
+end
+
+; Resources growth
+to grow
+  ifelse countdown-before-growth = 0
+  [ set pcolor green ]
+  [ set countdown-before-growth (countdown-before-growth - 1) ]
 
 end
 @#$#@#$#@
@@ -69,8 +104,8 @@ GRAPHICS-WINDOW
 1
 1
 0
-1
-1
+0
+0
 1
 -16
 16
@@ -136,8 +171,8 @@ SLIDER
 182
 226
 215
-person-gain-from-food
-person-gain-from-food
+gain-from-food
+gain-from-food
 0.0
 100
 50.0
@@ -160,6 +195,27 @@ lost-from-work
 1
 NIL
 HORIZONTAL
+
+PLOT
+938
+23
+1638
+320
+Gràfica
+NIL
+NIL
+0.0
+10.0
+0.0
+10.0
+true
+true
+"" ""
+PENS
+"Superfície Boscosa" 1.0 0 -6459832 true "" "plot count patches with [pcolor = brown ]"
+"Superfície Agrícola" 1.0 0 -10899396 true "" "plot count patches with [ pcolor = green ]"
+"Superfície Erosionada" 1.0 0 -7500403 true "" "plot count patches with [ pcolor = gray ]"
+"Població" 1.0 0 -2674135 true "" "plot count population"
 
 @#$#@#$#@
 ## WHAT IS IT?
