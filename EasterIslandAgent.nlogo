@@ -106,8 +106,8 @@ GRAPHICS-WINDOW
 1
 1
 0
-0
-0
+1
+1
 1
 -16
 16
@@ -160,10 +160,10 @@ SLIDER
 170
 initial-number-population
 initial-number-population
-2
+1
 200
-197.0
-5
+200.0
+1
 1
 NIL
 HORIZONTAL
@@ -204,7 +204,7 @@ PLOT
 1638
 320
 Gràfica
-NIL
+Ticks
 NIL
 0.0
 10.0
@@ -222,11 +222,20 @@ PENS
 @#$#@#$#@
 ## WHAT IS IT?
 
-(a general understanding of what the model is trying to show or explain)
+This is a representation of the Easter Island, which is based on the uncontrolled growth of the population in a limited resource scenario.
+
+It shows the effect of the population among the resources consumption. The more the population grows, the more its consumption does, so an increase of the arable fields becames obvious for the people to survive.
+
+Additionally, the field erades due to the excess of farming and becames no productive for a period of time.
+
+The field of the Easter Island was quite poor and obviously there wasn't any natality control, therefore the unavoidable fate of the natives was their extintion.
+
 
 ## HOW IT WORKS
 
-(what rules the agents use to create the overall behavior of the model)
+By default, the system is set to show how the uncontrolled consumption and natality finished with all the inhabitants of the island.
+
+Some paramenters can be adjusted so the user can experiment with the nature and the human being with the aim of finding a transitorian cycle or an equilibrium.
 
 ## HOW TO USE IT
 
