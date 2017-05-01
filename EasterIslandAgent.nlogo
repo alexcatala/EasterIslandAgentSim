@@ -36,7 +36,7 @@ to init-patches
   ask patches
   [
     set pcolor green ; tot es superfície agricola
-    set countdown-before-growth 3
+    set countdown-before-growth random 30
   ]
 end
 
@@ -85,7 +85,9 @@ end
 ; Resources growth
 to grow
   ifelse countdown-before-growth = 0
-  [ set pcolor green ]
+  [ set pcolor green
+    set countdown-before-growth random 30
+  ]
   [ set countdown-before-growth (countdown-before-growth - 1) ]
 
 end
