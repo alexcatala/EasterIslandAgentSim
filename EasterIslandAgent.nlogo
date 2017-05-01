@@ -1,11 +1,11 @@
-globals [ max-population supAgricola supBoscosa supErosionada ]
+globals [ max-population ]
 breed [ population person ]
 turtles-own [ energy ]
 patches-own [ countdown-before-growth ]
 
 to setup
   clear-all
-  set max-population 100000
+  set max-population 10000
   init-patches
   init-population
   ; No calen ja que a la gràfica es poden posar expressions
@@ -17,10 +17,12 @@ end
 
 to go
   if not any? population [ stop ]
+  if count population > max-population [ stop ]
   ask population [
     move
-    work
-    ;reproduce-population
+    act
+    reproduce
+    ; death
   ]
   ask patches with [ pcolor = gray ]
   [
@@ -63,13 +65,21 @@ to move
   fd 1
 end
 
-; People work
-to work
+; People action
+to act
+  eating
+  farming
+end
+
+to eating
   if (pcolor = brown)
   [
     set pcolor gray
     set energy energy + gain-from-food
   ]
+end
+
+to farming
   if (energy - lost-from-work > 0) and (pcolor = green)
   [
     set pcolor brown
@@ -78,10 +88,15 @@ to work
 end
 
 ; People reproduction
-to reproduce-population
-
+to reproduce
+  if energy > 80
+  [ hatch random(3) [ rt random 50 fd 3 ] ]
 end
 
+to death
+  if energy < 0
+  [ die ]
+end
 ; Resources growth
 to grow
   ifelse countdown-before-growth = 0
@@ -162,7 +177,7 @@ initial-number-population
 initial-number-population
 1
 200
-200.0
+10.0
 1
 1
 NIL
