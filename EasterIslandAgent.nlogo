@@ -1,17 +1,14 @@
-globals [ max-population ]
+globals [ max-population food ]
 breed [ population person ]
-turtles-own [ energy ]
-patches-own [ countdown-before-growth ]
+turtles-own [ age ]
+patches-own [ time-before-growth ]
 
 to setup
   clear-all
-  set max-population 10000
+  set max-population 100000
+  set food 2000
   init-patches
   init-population
-  ; No calen ja que a la gràfica es poden posar expressions
-  ;set supBoscosa count patches with [ pcolor = brown ]
-  ;set supAgricola count patches with [ pcolor = green ]
-  ;set supErosionada count patches with [ pcolor = gray ]
   reset-ticks
 end
 
@@ -29,7 +26,6 @@ to go
     grow
   ]
   tick
-  display-labels
 end
 
 ; -------------------------------------------------------------------
@@ -38,19 +34,19 @@ end
 to init-patches
   ask patches
   [
-    set pcolor green ; tot es superfície agricola
-    set countdown-before-growth random 30
+    ifelse random 100 < 90
+    [ set pcolor green ]
+    [ set pcolor brown ]
   ]
 end
 
 to init-population
   set-default-shape population "person"
-  create-population initial-number-population
+  create-population initial-population
   [
     set color white
-    set size 1.5  ; easier to see
-    set label-color blue - 2 ; don't know what it does
-    set energy random (2 * gain-from-food)
+    set size 0.75  ; easier to see
+    set label-color blue - 2
     setxy random-xcor random-ycor
   ]
 end
@@ -64,7 +60,6 @@ to move
   rt random 50
   lt random 50
   fd 1
-  set energy energy - 1
 end
 
 ; People action
@@ -74,52 +69,34 @@ to act
 end
 
 to eating
-  if (pcolor = brown)
-  [
-    set pcolor gray
-    set energy energy + gain-from-food
-  ]
+
 end
 
 to farming
-  if (energy - lost-from-work > 0) and (pcolor = green)
-  [
-    set pcolor brown
-    set energy energy - lost-from-work
-  ]
+
 end
 
 ; People reproduction
 to reproduce
-  if energy > 80
-  [ hatch 1 setxy random-xcor random-ycor ]
+
 end
 
 to death
-  if energy < 0
-  [ die ]
+
 end
 ; Resources growth
 to grow
-  ifelse countdown-before-growth = 0
-  [ set pcolor green
-    set countdown-before-growth random 30
-  ]
-  [ set countdown-before-growth (countdown-before-growth - 1) ]
-end
 
-to display-labels
-    ask population [ set label round energy ]
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
 471
 22
-908
-460
+1007
+559
 -1
 -1
-13.0
+16.0
 1
 10
 1
@@ -173,16 +150,37 @@ NIL
 NIL
 1
 
+PLOT
+1128
+17
+1828
+314
+Gràfica
+Ticks
+NIL
+0.0
+10.0
+0.0
+10.0
+true
+true
+"" ""
+PENS
+"Superfície Agrícola" 1.0 0 -6459832 true "" "plot count patches with [pcolor = brown ]"
+"Superfície Boscosa" 1.0 0 -10899396 true "" "plot count patches with [ pcolor = green ]"
+"Superfície Erosionada" 1.0 0 -7500403 true "" "plot count patches with [ pcolor = gray ]"
+"Població" 1.0 0 -2674135 true "" "plot count population"
+
 SLIDER
-22
-137
-248
-170
-initial-number-population
-initial-number-population
-1
-200
-42.0
+23
+227
+195
+260
+lost-from-work
+lost-from-work
+0
+100
+56.0
 1
 1
 NIL
@@ -197,47 +195,26 @@ gain-from-food
 gain-from-food
 0.0
 100
-30.0
+50.0
 1.0
 1
 NIL
 HORIZONTAL
 
 SLIDER
-23
-227
-195
-260
-lost-from-work
-lost-from-work
-0
+22
+137
+248
+170
+initial-population
+initial-population
+1000
+10000
+5000.0
 100
-20.0
-1
 1
 NIL
 HORIZONTAL
-
-PLOT
-938
-23
-1638
-320
-Gràfica
-Ticks
-NIL
-0.0
-10.0
-0.0
-10.0
-true
-true
-"" ""
-PENS
-"Superfície Boscosa" 1.0 0 -6459832 true "" "plot count patches with [pcolor = brown ]"
-"Superfície Agrícola" 1.0 0 -10899396 true "" "plot count patches with [ pcolor = green ]"
-"Superfície Erosionada" 1.0 0 -7500403 true "" "plot count patches with [ pcolor = gray ]"
-"Població" 1.0 0 -2674135 true "" "plot count population"
 
 @#$#@#$#@
 ## WHAT IS IT?
