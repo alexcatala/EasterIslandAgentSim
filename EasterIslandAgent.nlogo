@@ -22,13 +22,14 @@ to go
     move
     act
     reproduce
-    ; death
+    death
   ]
   ask patches with [ pcolor = gray ]
   [
     grow
   ]
   tick
+  display-labels
 end
 
 ; -------------------------------------------------------------------
@@ -63,6 +64,7 @@ to move
   rt random 50
   lt random 50
   fd 1
+  set energy energy - 1
 end
 
 ; People action
@@ -90,7 +92,7 @@ end
 ; People reproduction
 to reproduce
   if energy > 80
-  [ hatch random(3) [ rt random 50 fd 3 ] ]
+  [ hatch 1 setxy random-xcor random-ycor ]
 end
 
 to death
@@ -104,7 +106,10 @@ to grow
     set countdown-before-growth random 30
   ]
   [ set countdown-before-growth (countdown-before-growth - 1) ]
+end
 
+to display-labels
+    ask population [ set label round energy ]
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
@@ -177,7 +182,7 @@ initial-number-population
 initial-number-population
 1
 200
-10.0
+42.0
 1
 1
 NIL
@@ -192,7 +197,7 @@ gain-from-food
 gain-from-food
 0.0
 100
-50.0
+30.0
 1.0
 1
 NIL
@@ -207,7 +212,7 @@ lost-from-work
 lost-from-work
 0
 100
-50.0
+20.0
 1
 1
 NIL
