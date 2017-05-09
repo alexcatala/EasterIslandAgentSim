@@ -1,12 +1,12 @@
-globals [ max-population food ]
+globals [ food ]
 breed [ population person ]
-turtles-own [ age ]
-patches-own [ time-before-growth ]
+turtles-own [ traveltime state age]
+patches-own [ erosion ]
 
 to setup
   clear-all
-  set max-population 100000
-  set food 2000
+  ;set max-population 2000
+  ;set food 2000
   init-patches
   init-population
   reset-ticks
@@ -14,17 +14,20 @@ end
 
 to go
   if not any? population [ stop ]
-  if count population > max-population [ stop ]
   ask population [
-    move
-    act
-    reproduce
+    ifelse state = "settle"
+    [ reproduce
+      ]
+    [ move
+      set traveltime (traveltime - 1)
+      settle ]
     death
+    set age (age + 1)
   ]
-  ask patches with [ pcolor = gray ]
-  [
-    grow
-  ]
+  ask patches with [pcolor = brown]
+  [ erode ]
+  ask patches with [pcolor = gray]
+  [ grow ]
   tick
 end
 
@@ -34,9 +37,9 @@ end
 to init-patches
   ask patches
   [
-    ifelse random 100 < 90
-    [ set pcolor green ]
-    [ set pcolor brown ]
+    ;ifelse random 100 < 95
+    set pcolor green
+    ;[ set pcolor gray ]
   ]
 end
 
@@ -48,6 +51,9 @@ to init-population
     set size 0.75  ; easier to see
     set label-color blue - 2
     setxy random-xcor random-ycor
+    set state "no-settle"
+    set traveltime 5
+    set age 0
   ]
 end
 
@@ -62,30 +68,38 @@ to move
   fd 1
 end
 
-; People action
-to act
-  eating
-  farming
-end
-
-to eating
-
-end
-
-to farming
+to settle
+if (pcolor = green)
+  [set pcolor brown
+   set state "settle"
+   set traveltime 5
+  ]
 
 end
 
 ; People reproduction
 to reproduce
-
+if random 100 < 10
+  [hatch 1 setxy random-xcor random-ycor set state "no-settle" set age 0]
 end
 
 to death
-
+  if traveltime = 0 [ die ]
+  if age > 30
+  [
+    set pcolor gray
+    die
+  ]
 end
 ; Resources growth
 to grow
+if random 100 < 50
+  [
+  set pcolor green
+  ]
+end
+
+to erode
 
 end
 @#$#@#$#@
@@ -208,10 +222,10 @@ SLIDER
 170
 initial-population
 initial-population
-1000
-10000
-5000.0
+1
 100
+2.0
+1
 1
 NIL
 HORIZONTAL
