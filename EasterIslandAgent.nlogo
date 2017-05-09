@@ -1,4 +1,4 @@
-globals [ food ]
+globals [  ]
 breed [ population person ]
 turtles-own [ traveltime state age]
 patches-own [ erosion ]
@@ -52,7 +52,7 @@ to init-population
     set label-color blue - 2
     setxy random-xcor random-ycor
     set state "no-settle"
-    set traveltime 5
+    set traveltime 3
     set age 0
   ]
 end
@@ -72,7 +72,7 @@ to settle
 if (pcolor = green)
   [set pcolor brown
    set state "settle"
-   set traveltime 5
+   set traveltime 3
   ]
 
 end
@@ -80,12 +80,12 @@ end
 ; People reproduction
 to reproduce
 if random 100 < 10
-  [hatch 1 setxy random-xcor random-ycor set state "no-settle" set age 0]
+  [hatch 1 setxy random-xcor random-ycor set state "no-settle" set age 0 set traveltime 3]
 end
 
 to death
   if traveltime = 0 [ die ]
-  if age > 30
+  if age > 65
   [
     set pcolor gray
     die
@@ -93,7 +93,7 @@ to death
 end
 ; Resources growth
 to grow
-if random 100 < 50
+if random 100 < probability-of-regrowth
   [
   set pcolor green
   ]
@@ -203,14 +203,14 @@ HORIZONTAL
 SLIDER
 23
 182
-226
+228
 215
-gain-from-food
-gain-from-food
+probability-of-regrowth
+probability-of-regrowth
 0.0
 100
-50.0
-1.0
+40.0
+10
 1
 NIL
 HORIZONTAL
@@ -229,6 +229,17 @@ initial-population
 1
 NIL
 HORIZONTAL
+
+MONITOR
+1249
+394
+1425
+443
+Població
+count population
+0
+1
+12
 
 @#$#@#$#@
 ## WHAT IS IT?
