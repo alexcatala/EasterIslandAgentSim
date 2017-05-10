@@ -187,21 +187,6 @@ PENS
 
 SLIDER
 23
-227
-195
-260
-lost-from-work
-lost-from-work
-0
-100
-56.0
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-23
 182
 228
 215
