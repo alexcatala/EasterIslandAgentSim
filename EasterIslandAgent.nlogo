@@ -5,8 +5,6 @@ patches-own [ erosion ]
 
 to setup
   clear-all
-  ;set max-population 2000
-  ;set food 2000
   init-patches
   init-population
   reset-ticks
@@ -16,10 +14,15 @@ to go
   if not any? population [ stop ]
   ask population [
     ifelse state = "settle"
-    [ reproduce
+    [ ifelse pcolor != gray
+      [ reproduce ]
+      [
+        set state "no-settle"
+        move
+        settle
       ]
+    ]
     [ move
-      set traveltime (traveltime - 1)
       settle ]
     death
     set age (age + 1)
@@ -36,11 +39,7 @@ end
 ; -------------------------------------------------------------------
 to init-patches
   ask patches
-  [
-    ;ifelse random 100 < 95
-    set pcolor green
-    ;[ set pcolor gray ]
-  ]
+  [ set pcolor green ]
 end
 
 to init-population
@@ -66,26 +65,28 @@ to move
   rt random 50
   lt random 50
   fd 1
+  set traveltime (traveltime - 1)
 end
 
 to settle
 if (pcolor = green)
-  [set pcolor brown
-   set state "settle"
-   set traveltime 3
+  [
+    set pcolor brown
+    set state "settle"
+    set traveltime 3
   ]
 
 end
 
 ; People reproduction
 to reproduce
-if random 100 < 10
-  [hatch 1 setxy random-xcor random-ycor set state "no-settle" set age 0 set traveltime 3]
+  if random 100 < 17
+  [ hatch 1 setxy random-xcor random-ycor set state "no-settle" set age 0 set traveltime 3 ]
 end
 
 to death
   if traveltime = 0 [ die ]
-  if age > 65
+  if age > random-normal 70 1
   [
     set pcolor gray
     die
@@ -93,24 +94,23 @@ to death
 end
 ; Resources growth
 to grow
-if random 100 < probability-of-regrowth
-  [
-  set pcolor green
-  ]
+  if random-normal regrowth-expectancy 1.3 >= regrowth-expectancy + 2
+  [ set pcolor green ]
 end
 
 to erode
-
+  if random-normal erode-expectancy 2 >= erode-expectancy + 5
+  [ set pcolor gray ]
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-471
-22
-1007
-559
+629
+38
+1217
+627
 -1
 -1
-16.0
+11.0
 1
 10
 1
@@ -131,10 +131,10 @@ ticks
 30.0
 
 BUTTON
-25
-56
-92
-89
+27
+35
+94
+68
 setup
 setup
 NIL
@@ -148,10 +148,10 @@ NIL
 1
 
 BUTTON
-119
-55
-182
-88
+121
+34
+184
+67
 go
 go
 T
@@ -165,10 +165,10 @@ NIL
 1
 
 PLOT
-1128
-17
-1828
-314
+30
+331
+612
+628
 Gràfica
 Ticks
 NIL
@@ -186,13 +186,13 @@ PENS
 "Població" 1.0 0 -2674135 true "" "plot count population"
 
 SLIDER
-23
-182
-228
-215
-probability-of-regrowth
-probability-of-regrowth
-0.0
+27
+122
+292
+155
+regrowth-expectancy
+regrowth-expectancy
+0
 100
 40.0
 10
@@ -201,28 +201,109 @@ NIL
 HORIZONTAL
 
 SLIDER
-22
-137
-248
-170
+26
+77
+292
+110
 initial-population
 initial-population
 1
 100
-2.0
+1.0
 1
 1
 NIL
 HORIZONTAL
 
 MONITOR
-1249
-394
-1425
-443
+29
+215
+161
+264
 Població
 count population
 0
+1
+12
+
+SLIDER
+30
+170
+291
+203
+erode-expectancy
+erode-expectancy
+0
+100
+30.0
+10
+1
+NIL
+HORIZONTAL
+
+MONITOR
+30
+272
+161
+321
+Sup. Boscosa
+count patches with [pcolor = green ]
+0
+1
+12
+
+MONITOR
+170
+273
+290
+322
+Sup. Conreada
+count patches with [pcolor = brown ]
+0
+1
+12
+
+MONITOR
+300
+273
+432
+322
+Sup. Erosionada
+count patches with [pcolor = gray ]
+0
+1
+12
+
+MONITOR
+444
+213
+562
+262
+Avg. Age
+mean [ age ] of population
+2
+1
+12
+
+MONITOR
+171
+214
+293
+263
+Settle
+count population with [state = \"settle\" ]
+0
+1
+12
+
+MONITOR
+301
+213
+434
+262
+No-Settle
+count population with [ state = \"no-settle\" ]
+2
 1
 12
 
