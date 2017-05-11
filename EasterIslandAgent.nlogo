@@ -106,11 +106,11 @@ end
 GRAPHICS-WINDOW
 629
 38
-1217
-627
+1198
+608
 -1
 -1
-11.0
+17.0
 1
 10
 1
@@ -244,33 +244,33 @@ HORIZONTAL
 MONITOR
 30
 272
-161
+182
 321
-Sup. Boscosa
-count patches with [pcolor = green ]
-0
+Perc. Sup. Boscosa
+(count patches with [pcolor = green ] / count patches) * 100
+2
 1
 12
 
 MONITOR
-170
+190
 273
-290
+352
 322
-Sup. Conreada
-count patches with [pcolor = brown ]
-0
+Perc. Sup. Conreada
+(count patches with [pcolor = brown ] / count patches) * 100
+2
 1
 12
 
 MONITOR
-300
+359
 273
-432
+532
 322
-Sup. Erosionada
-count patches with [pcolor = gray ]
-0
+Perc. Sup. Erosionada
+(count patches with [pcolor = gray ] / count patches) * 100
+2
 1
 12
 
@@ -290,9 +290,9 @@ MONITOR
 214
 293
 263
-Settle
-count population with [state = \"settle\" ]
-0
+Perc. Settle
+(count population with [state = \"settle\" ] / count population) * 100
+2
 1
 12
 
@@ -301,8 +301,8 @@ MONITOR
 213
 434
 262
-No-Settle
-count population with [ state = \"no-settle\" ]
+Perc. No-Settle
+(count population with [ state = \"no-settle\" ] / count population ) * 100
 2
 1
 12
